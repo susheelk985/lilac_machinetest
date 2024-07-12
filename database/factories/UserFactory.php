@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Department;
+use App\Models\Designation;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -23,12 +26,22 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        $departments = Department::all()->pluck('id')->toArray();
+        $department_id = $this->faker->randomElement($departments);
+        $designations = Designation::all()->pluck('id')->toArray();
+        $designation_id = $this->faker->randomElement($designations);
         return [
             'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'department_id' => $department_id,
+            'designation_id' => $designation_id,
+            'phone_number' => $this->faker->numerify('##########'),
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+
+            // 'email' => fake()->unique()->safeEmail(),
+            // 'email_verified_at' => now(),
+            // 'password' => static::$password ??= Hash::make('password'),
+            // 'remember_token' => Str::random(10),
         ];
     }
 
